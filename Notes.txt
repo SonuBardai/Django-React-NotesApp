@@ -1,0 +1,6 @@
+Using Virtual Environment: 
+    Run the following commands
+    - Set-ExecutionPolicy Unrestricted -Scope Process
+    - env\scripts\activate
+Stop Using Virtual Environment:
+    - deactivate

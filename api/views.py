@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from .serializers import NoteSerializer
 from .models import Note
 
+
 @api_view(['GET'])
 def getRoutes(request):
     routes = {
@@ -13,8 +14,10 @@ def getRoutes(request):
         '/add': 'Add note',
         '/remove/<int:pk>': 'Remove note',
         '/remove': 'Remove all notes',
+        '/update/<int:pk>': 'Update note',
     }
     return Response(routes)
+
 
 @api_view(['GET'])
 def getNotes(request):
@@ -22,11 +25,13 @@ def getNotes(request):
     serializer = NoteSerializer(notes, many=True)
     return Response(serializer.data)
 
+
 @api_view(['GET'])
 def getNote(request, pk):
     note = Note.objects.filter(id=pk).first()
     serializer = NoteSerializer(note, many=False)
     return Response(serializer.data)
+
 
 @api_view(['POST'])
 def addNote(request):
@@ -34,6 +39,7 @@ def addNote(request):
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
+
 
 @api_view(['DELETE'])
 def removeNote(request, pk):
@@ -43,6 +49,19 @@ def removeNote(request, pk):
         return Response("Deleted")
     else:
         return Response("Note not found")
+
+
+@api_view(['PUT'])
+def updateNote(request, pk):
+    note = Note.objects.filter(id=pk).first()
+    if note:
+        serializer = NoteSerializer(instance=note, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+        return Response("Updated Note")
+    else:
+        return Response("Note not found")
+
 
 @api_view(['DELETE'])
 def removeNotes(request):
